@@ -5,7 +5,7 @@ pip install django
 
 pip install -e git+git@github.com:digitalinc/django-fukinbook.git#egg=django_fukinbook
 
-cd supertrunfo
+cd teammaia_fbhack
 
 python manage.py syncdb
 
