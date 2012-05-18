@@ -5,7 +5,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^login/', 'django_fukinbook.views.login', name='login'),
     url(r'^canvas/', 'facecards.views.canvas', name='canvas'),
-    url(r'^keepalive/', 'facecards.views.keepalive', name='keepalive'),
+    url(r'^keep_alive/', 'facecards.views.keep_alive', name='keep_alive'),
     
     
     url(r'^admin/', include(admin.site.urls)),

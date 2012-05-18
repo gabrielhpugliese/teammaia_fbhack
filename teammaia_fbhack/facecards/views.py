@@ -3,13 +3,13 @@ from django.http import HttpResponse
 from django_fukinbook.decorators import facebook_auth_required
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
-from django_fukinbook.graph_api import GraphAPI
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 import logging
 import datetime
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from facebook_client import FacebookClient
 
 @login_required
 def keep_alive(request):
@@ -24,11 +24,8 @@ def canvas(request):
     pks = [s.get_decoded().get('_auth_user_id') for s in sessions]
     users = [User.objects.get(pk=p) for p in pks]
     
-    api = GraphAPI(request.access_token)
-    fql = '''SELECT uid FROM user WHERE 
-    uid IN (SELECT uid2 FROM friend WHERE uid1 = me())'''
-    my_friends = api.get(path='fql', fql=fql)
-    
+    client = FacebookClient(request.access_token)
+    my_friends = client.get_my_friends()
     my_friends_uids = [friend.get('uid') for friend in my_friends]
     
     logged_friends = []

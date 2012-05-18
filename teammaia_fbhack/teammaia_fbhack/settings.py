@@ -182,6 +182,7 @@ FACEBOOK_APP_SCOPE = ','.join(['user_relationships',
 
 GRAPH_API_URL = 'https://graph.facebook.com/'
 MAIN_URL = '/canvas/' # This is the index of your facebook app
+LOGIN_URL = '/login/'
 
 try:
     from local_settings import *

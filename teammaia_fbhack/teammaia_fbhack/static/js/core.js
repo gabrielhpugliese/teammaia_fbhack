@@ -1,10 +1,10 @@
 $(document).ready(function(){
-	setTimeout('keep_alive()', 40);
+	setTimeout('keep_alive()', 5*1000);
 });
 	
 function keep_alive() {
-	var remote_url = '/keepalive';
+	var remote_url = '/keep_alive';
 	$.get(remote_url, function(data) { 
-		setTimeout('keep_alive()', 40); 
+		setTimeout('keep_alive()', 5*1000);
 	});
 }
