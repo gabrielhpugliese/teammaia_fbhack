@@ -9,6 +9,7 @@ from django.template.context import RequestContext
 import logging
 import datetime
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
 @login_required
 def keep_alive(request):
