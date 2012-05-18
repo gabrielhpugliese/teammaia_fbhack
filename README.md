@@ -3,11 +3,9 @@ teammaia_fbhack
 
 pip install django
 
-django-admin.py startproject supertrunfo
+pip install -e git+git@github.com:digitalinc/django-fukinbook.git#egg=django_fukinbook
 
 cd supertrunfo
-
-pip install -e git+git@github.com:digitalinc/django-fukinbook.git#egg=django_fukinbook
 
 python manage.py syncdb
 
