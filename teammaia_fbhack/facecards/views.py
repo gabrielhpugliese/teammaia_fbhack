@@ -1,4 +1,3 @@
-# Create your views here.
 from django.http import HttpResponse
 from django_fukinbook.decorators import facebook_auth_required
 from django.contrib.sessions.models import Session
@@ -11,15 +10,8 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from facebook_client import FacebookClient
 
-@login_required
-def keep_alive(request):
-    request.session.set_expiry(60)
-    
-    return HttpResponse('OK')
-
 @facebook_auth_required
 def canvas(request):
-    
     sessions = Session.objects.filter(expire_date__gte=timezone.now())
     pks = [s.get_decoded().get('_auth_user_id') for s in sessions]
     users = [User.objects.get(pk=p) for p in pks]
@@ -37,7 +29,13 @@ def canvas(request):
     return render_to_response('index.html', template_context,
                               context_instance=RequestContext(request))
     
+@login_required
+def keep_alive(request):
+    request.session.set_expiry(60)
     
+    return HttpResponse('OK')
+    
+
 
 
 
