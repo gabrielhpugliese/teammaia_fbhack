@@ -3,7 +3,7 @@ teammaia_fbhack
 
 pip install django
 
-django_admin.py startproject supertrunfo
+django-admin.py startproject supertrunfo
 
 cd supertrunfo
 
