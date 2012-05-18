@@ -109,6 +109,7 @@ WSGI_APPLICATION = 'teammaia_fbhack.wsgi.application'
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT_PATH, 'templates'),
+    os.path.join(PROJECT_ROOT_PATH, 'django_fukinbook/templates'),
 )
 
 INSTALLED_APPS = (
@@ -125,6 +126,7 @@ INSTALLED_APPS = (
     # 'debug_toolbar',
     # 'south',
     'django_fukinbook',
+    'facecards',
 )
 
 AUTH_PROFILE_MODULE = 'django_fukinbook.UserProfile'
@@ -165,10 +167,6 @@ LOGGING = {
         },
     }
 }
-
-TEMPLATE_DIRS = (
-    'teammaia_fbhack/django_fukinbook/templates',
-)
 
 AUTHENTICATION_BACKENDS = (
     'django_fukinbook.backends.FacebookBackend',

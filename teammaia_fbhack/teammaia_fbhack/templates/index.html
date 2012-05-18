@@ -1,0 +1,5 @@
+<ul>
+{% for friend in logged_friends %}
+	<li>{{ friend.pic_square }}{{ friend.first_name }} {{ friend.last_name }}</li>
+{% endfor %}
+</ul>
