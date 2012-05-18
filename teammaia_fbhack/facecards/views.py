@@ -10,9 +10,15 @@ import logging
 import datetime
 from django.utils import timezone
 
+@login_required
+def keep_alive(request):
+    request.session.set_expiry(60)
+    
+    return HttpResponse('OK')
+
 @facebook_auth_required
 def canvas(request):
-    request.session.set_expiry(60)
+    
     sessions = Session.objects.filter(expire_date__gte=timezone.now())
     pks = [s.get_decoded().get('_auth_user_id') for s in sessions]
     users = [User.objects.get(pk=p) for p in pks]
@@ -32,3 +38,8 @@ def canvas(request):
     template_context = {'logged_friends': logged_friends}
     return render_to_response('index.html', template_context,
                               context_instance=RequestContext(request))
+    
+    
+
+
+
