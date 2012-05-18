@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block extra_body %}
+
+<div id='friends'>
+	<h2>Friends</h2>
+	<ul>
+	{% for friend in logged_friends %}
+		<li><img src='{{ friend.pic_square }}' />{{ friend.first_name }} {{ friend.last_name }}</li>
+	{% endfor %}
+	</ul>
+</div>
+
+{% endblock %}
