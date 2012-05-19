@@ -12,6 +12,7 @@ from facebook_client import FacebookClient
 from django.views.decorators.csrf import csrf_exempt
 from models import Game, Card
 import simplejson
+import random
 
 @facebook_auth_required
 def canvas(request):
@@ -63,8 +64,9 @@ def game_request(request):
     u2 = User.objects.filter(pk=friend_id)[0]
 
     try:
-        game = Game(player1 = u1, player2 = u2, status='w').save()
-    except:
+        game = Game(player1 = u1, player2 = u2, status='w', turn=None).save()
+    except Exception, e:
+        logging.warn(e)
         return HttpResponse('Falha')
         
     return HttpResponse('OK')
@@ -110,9 +112,15 @@ def play(request, game_pk):
     if game.status != 'p':
         logging.debug('ENTREI')
         game.status = 'p'
+        if random.randint(1,2) == 1:
+            game.turn = game.player1
+        else:
+            game.turn = game.player2
         game.save()
     
-    template_context = {'game_pk': game_pk}
+    
+        
+    template_context = {'game_pk': game_pk, 'game': game}
     return render_to_response('play.html', template_context,
                               context_instance=RequestContext(request))
 
@@ -133,24 +141,78 @@ def check_finish(request, game_pk):
     if game.status == 'f':
         return HttpResponse('OK')
     return HttpResponse('Nao')
-    
+
+def return_order(card):
+    return card.order
+
 @login_required
 def get_next_card(request):
     game_pk = request.GET.get('game_pk')
     deck = Card.objects.filter(player=request.user, game=game_pk)
-    deck_len = len(deck)
-    def return_order(card):
-        return card.order
+    my_deck_len = len(deck)
     card = min(deck, key=return_order)
     
     card_attrs = {'name': card.name,
                   'pic_square': card.pic_square,
                   'attr1': card.attr1,
                   'attr2': card.attr2,
-                  'deck_len': deck_len}
+                  'my_deck_len': my_deck_len}
     return HttpResponse(simplejson.dumps(card_attrs))
     
-    
+@login_required
+def get_turn(request, game_pk):
+    turn = Game.objects.get(pk=game_pk).turn
+    if turn == request.user:
+        return HttpResponse('OK')
+    return HttpResponse('Nao')
         
-
-
+@login_required
+def resolve_round(request):
+    attr = request.GET.get('attr')
+    game_pk = request.GET.get('game_pk')
+    game = Game.objects.get(pk=game_pk)
+    if game.turn != request.user:
+        return HttpResponse('Falha')
+    my_deck = Card.objects.filter(player=request.user, game=game)
+    opponent_user = None
+    if game.player1 == request.user:
+        opponent_user = game.player2
+    else:
+        opponent_user = game.player1
+    opponent_deck = Card.objects.filter(player=opponent_user, game=game)
+    
+    my_card = min(my_deck, key=return_order)
+    opponent_card = min(opponent_deck, key=return_order)
+    
+    my_last_card = max(my_deck, key=return_order)
+    opponent_last_card = max(opponent_deck, key=return_order)
+    
+    if my_card.__getattribute__(attr) >= opponent_card.__getattribute__(attr):
+        my_card.order = my_last_card.order + 1
+        my_card.save()
+        opponent_card.user = request.user
+        opponent_card.order = my_last_card.order + 2
+        opponent_card.save()
+        game.turn = request.user
+    else:
+        opponent_card.order = opponent_last_card.order + 1
+        opponent_card.save()
+        my_card.user = opponent_user
+        my_card.order = opponent_last_card.order + 2
+        my_card.save()
+        game.turn = opponent_user
+        
+    game.lock = True
+    game.save()
+    return HttpResponse('OK')
+    
+@login_required
+def get_lock(request):
+    game_pk = request.GET.get('game_pk')
+    game = Game.objects.get(pk=game_pk)
+    if game.lock == True:
+        game.lock == False
+        return HttpResponse('OK')
+    
+    return HttpResponse('AindaNao')
+        

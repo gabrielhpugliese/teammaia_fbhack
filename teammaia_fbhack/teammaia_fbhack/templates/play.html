@@ -35,21 +35,37 @@
          <div class="span5 offset1">
             <img alt="" src="{{ user.get_profile.pic_square }}">
             <h4>{{ user.get_full_name }}</h4>
-         	<div id='player1'>
-         	</div>
+            <h4 class='cards'></h4>
+            <h4 class='turn'></h4>
+            <br /><br /><br />
+            <ul class="thumbnails">
+            <li class="span3">
+            </li>
+            <li class="span2">
+            <div class="thumbnail">
+            
+         	<div id='player1'>				
+				<img src=''/>
+				<h3></h3>
+				<a class="attr1"></a><br />
+				<a class="attr2"></a>
+			</div>
+			</div>
+			</li>
+			</ul>
          </div>
          <div class="span5">
          	<div id='player2'>
           	</div>
          </div>
       </div>
-      <a id='finish-button' href=''>Finish</a>
+      <a id='finish-button' class="btn btn-small" href=''>Finish</a>
    </div>
-
 
 <script>
 $(document).ready(function(){
 	setTimeout('check_finish()', 1*1000);
+	setTimeout('get_lock()', 1*1000);
 	get_next_card();
 });
 
@@ -72,16 +88,50 @@ function check_finish(){
 }
 
 function get_next_card(){
-	$.get('/get_next_card/', {game_pk: {{ game_pk }}}, function(data){
-		data = $.parseJSON(data);
+	var player = $('#player1');
+	var data;
+	$.get('/get_next_card/', {game_pk: {{ game_pk }}}, function(resp){
+		data = $.parseJSON(resp);
 		console.log(data);
-		var player = $('#player1');
-		player.append('<h2>Cards Remaining:'+data.deck_len+'</h2>');
-		player.append('<img src="'+data.pic_square+'" />');
-		player.append('<h3>'+data.name+'</h3>');
-		player.append('<a href="">Friends: '+data.attr1+'</a><br/>');
-		player.append('<a href="">Likes: '+data.attr2+'</a>');
+		player.find('.cards').html('Cards Remaining:'+data.my_deck_len);
+		player.find('img').attr('src', data.pic_square);
+		player.find('h3').html(data.name);
+	}).success(function(){
+		$.get('/get_turn/{{ game_pk }}', function(resp){
+			player.find('#turn').html('');
+			if(resp == 'OK'){
+				player.find('.turn').html('Your turn');
+				player.find('.attr1').attr('href', '');
+				player.find('.attr1').html('Friends: '+data.attr1);
+				player.find('.attr2').attr('href', '');
+				player.find('.attr2').html('Likes: '+data.attr2);
+			} else {
+				player.find('.turn').html('Your opponent\'s turn');
+				player.find('.attr1').html('Friends: '+data.attr1);
+				player.find('.attr2').html('Likes: '+data.attr2);
+			}
+		});
 	});
+}
+
+function resolve_round(){
+	$('a').click(function(event){
+		event.preventDefault();
+		console.log('NAO EH NOIZ');
+		$.get('/resolve_round/', {attr: $(this).attr('id'), game_pk: {{ game_pk }} }, function(){
+			console.log('EH NOIZ');
+			get_next_card();
+		});
+	});
+}
+
+function get_lock(){
+	setTimeout('get_lock()', 1*1000);
+	$.get('/get_lock', { game_pk: {{ game_pk }} }, function(data){
+		if(data == 'OK'){
+			get_next_card();
+		}
+	})
 }
 </script>
 {% endblock %}
