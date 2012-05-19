@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block extra_body %}
+
+<br />
+<br />
+<br />
+<br />
+<br />
+
+<header class="jumbotron masthead">
+  <div class="inner">
+    <h1>Facecards</h1>
+    <p>Dare your friends in a facebook social super trunph game style!</p>
+    <p class="download-info well">
+       {% if error %}
+           {% if error == 'AUTH_FAILED' %}
+            	<div class="alert alert-error">Authentication failed</div>
+           {% else %}{% if error == 'AUTH_DISABLED' %}
+              	<div class="alert alert-error">Your account is disabled</div>
+           {% else %}{% if error == 'AUTH_DENIED' %}
+                <div class="alert alert-error">You did not allow access</div>
+           {% endif %}{% endif %}{% endif %}
+        {% else %}
+            <a href="{{ auth_url }}" class="btn btn-primary btn-large">Login with Facebook</a>
+        {% endif %}
+      <a href="." class="btn btn-large">Learn more >></a>
+    </p>
+  </div>
+</header>
+
+  
+{% endblock %}

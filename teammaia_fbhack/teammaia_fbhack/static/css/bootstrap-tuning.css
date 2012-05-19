@@ -1,0 +1,148 @@
+/* Add additional stylesheets below
+-------------------------------------------------- */
+/*
+  Bootstrap's documentation styles
+  Special styles for presenting Bootstrap's documentation and examples
+*/
+
+
+/* Body and structure
+-------------------------------------------------- */
+body {
+  position: relative;
+  background-repeat: no-repeat;
+  /*background-color: #fff;
+  background-image: url(../images/grid-18px-masked.png);
+  background-repeat: repeat-x;
+  background-position: 0 40px;*/
+}
+
+/* Footer
+-------------------------------------------------- */
+.footer {
+  margin-top: 45px;
+  padding: 35px 0 36px;
+  border-top: 1px solid #e5e5e5;
+}
+.footer p {
+  margin-bottom: 0;
+  color: #555;
+}
+
+/* Misc
+-------------------------------------------------- */
+
+img {
+  max-width: 100%;
+}
+
+/* Make tables spaced out a bit more */
+h2 + table,
+h3 + table,
+h4 + table,
+h2 + .row {
+  margin-top: 5px;
+}
+
+.scrollspy-example {
+  height: 500px;
+  overflow: auto;
+  position: relative;
+}
+
+#begin{
+	margin-top: 70px;
+}
+
+.icone-topbar { 
+/*width: 50px; 
+height: 40px;*/ 
+max-width: 100%;
+padding: 10px 10px 10px 0; 
+} 
+
+.biglib-top-form{
+	-webkit-box-shadow: none;
+	border: 0px;
+	padding: 10px 10px 10px 0; 
+}
+
+.biglib-top-navbar-inner {
+	background-color: #2f5f8f;
+	background: -moz-linear-gradient(top, #2f5f8f, #54aaff 100%); /* for mozzila */
+	background: -ms-linear-gradient(top, #2f5f8f, #54aaff);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#2f5f8f), to(#54aaff)); /* for webkit */
+ 	background: -webkit-linear-gradient(top, #2f5f8f, #54aaff);
+ 	background: -o-linear-gradient(top, #2f5f8f, #54aaff);
+ 	background: linear-gradient(top, #2f5f8f, #54aaff);
+}
+    
+.biglib-navbar .nav > li > a {
+	color: #fff;
+	text-shadow: none;
+}
+    
+.dropdown {
+	padding: 10px 10px 10px 0; 
+}
+
+.table {
+margin: 0px auto;
+border-width: 0px;
+border-style: none;
+}
+
+.table-condensed th,
+.table-condensed td {
+  padding: 4px 5px;
+}
+
+input[type="hidden"] { display: none; }
+
+/* Jumbotrons
+-------------------------------------------------- */
+.jumbotron {
+  position: relative;
+}
+.jumbotron h1 {
+  margin-bottom: 9px;
+  font-size: 81px;
+  font-weight: bold;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.jumbotron p {
+  margin-bottom: 18px;
+  font-weight: 300;
+}
+.jumbotron .btn-large {
+  font-size: 20px;
+  font-weight: normal;
+  padding: 14px 24px;
+  margin-right: 10px;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+}
+.jumbotron .btn-large small {
+  font-size: 14px;
+}
+
+/* Masthead (docs home) */
+.masthead {
+  padding-top: 36px;
+  margin-bottom: 72px;
+}
+.masthead h1,
+.masthead p {
+  text-align: center;
+}
+.masthead h1 {
+  margin-bottom: 18px;
+}
+.masthead p {
+  margin-left: 5%;
+  margin-right: 5%;
+  font-size: 30px;
+  line-height: 36px;
+}

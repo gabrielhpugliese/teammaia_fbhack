@@ -29,4 +29,6 @@ pip-log.txt
 #Project
 .project
 .pydevproject
+<<<<<<< HEAD
 *.db
+django_fukinbook/

@@ -1,6 +1,8 @@
 # Django settings for teammaia_fbhack project.
 import os
 
+SETTINGS_DIR = os.path.abspath(os.path.dirname(__file__))
+
 PROJECT_ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 DEBUG = True
@@ -90,6 +92,7 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader',
 #     'django.template.loaders.eggs.Loader',
 )
+
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
