@@ -1,5 +1,5 @@
 from django_fukinbook.graph_api import GraphAPI
-
+import random
 
 class FacebookClient(GraphAPI):
     def get_my_friends(self):
@@ -16,6 +16,7 @@ class FacebookClient(GraphAPI):
         my_friends = self.get(path='fql', fql=fql)
         
         my_deck = []
+        random.shuffle(my_friends)
         for friend in my_friends:
             if limit > 0 and friend.get('friend_count') and friend.get('likes_count'):
                 my_deck.append(friend)
