@@ -9,6 +9,8 @@ import datetime
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from facebook_client import FacebookClient
+from django.views.decorators.csrf import csrf_exempt
+from models import Game
 
 @facebook_auth_required
 def canvas(request):
@@ -31,10 +33,36 @@ def canvas(request):
     
 @login_required
 def keep_alive(request):
-    request.session.set_expiry(60)
+    request.session.set_expiry(6000)
     
     return HttpResponse('OK')
+
+@csrf_exempt
+@login_required
+def game_request(request):
+
+    friend_id = request.POST["friend"]
+    logging.info(friend_id)
     
+    playerOnGame = len(Game.objects.filter(player1__pk=friend_id))
+    playerOnGame += len(Game.objects.filter(player2__pk=friend_id))
+    
+    if playerOnGame != 0:
+        return HttpResponse('Falha')
+    
+    logging.info("usuario disponivel")
+    
+    logging.info(request.user.pk)
+    
+    u1 = User.objects.filter(pk=request.user.pk)[0]
+    u2 = User.objects.filter(pk=friend_id)[0]
+    g = Game(player1 = u1, player2 = u2, status='w').save()
+    
+    return HttpResponse('OK')
+
+
+
+
 
 
 

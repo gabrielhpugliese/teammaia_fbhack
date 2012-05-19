@@ -2,13 +2,39 @@
 
 {% block extra_body %}
 
+
 <div id='friends'>
 	<h2>Friends</h2>
 	<ul>
 	{% for friend in logged_friends %}
-		<li><img src='{{ friend.pic_square }}' />{{ friend.first_name }} {{ friend.last_name }}</li>
+		<li id={{friend.id}}>
+		    <input type="radio" name="friendRadio"/>
+		    <img src='{{ friend.pic_square }}' />{{ friend.first_name }} {{ friend.last_name }}
+		</li>
 	{% endfor %}
 	</ul>
+	<a id=play-button href="">Jogar</a>
+	
+</div>
+<div id="game_request_popup">
+    
 </div>
 
+<script>
+$("#play-button").click(function(event){
+    event.preventDefault();
+    console.log("clicado");
+    var id = $('input[name="friendRadio"]:checked').parent()[0].id;
+    console.log(id);
+    $.post('/game_request/',{friend : id}, function(data) {
+        console.log(data)
+        if(data == "OK"){
+            $('#game_request_popup').html(data);
+        }
+        else {
+            $('#game_request_popup').html(data);
+        }
+    });
+});
+</script>
 {% endblock %}

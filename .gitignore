@@ -29,4 +29,5 @@ pip-log.txt
 #Project
 .project
 .pydevproject
+sqlite.db
 django_fukinbook/
