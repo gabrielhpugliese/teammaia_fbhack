@@ -42,7 +42,7 @@
          	<!-- Carousel items -->
    				<div class="carousel-inner">
     				<div class="active item">
-    				    <ul class="thumbnails">
+    				    <ul class="thumbnails" style="text-align: center;">
                         <!-- lista dos amigos aqui -->
                             <li class="span1">
                             </li>
@@ -100,7 +100,7 @@
             </div>
             <div class="span5">
          		<div class="page-header">
-            		<h3>List active rounds</h3>
+            		<h3>List pending games</h3>
             	</div>
             	<table id="call_to_play" class="table table-striped">
             	<thead><tr><th>Opponent</th><th>Status</th></tr></thead>
@@ -145,7 +145,9 @@ function refresh_logged_friends(){
 	setTimeout('refresh_logged_friends()', 1*1000);
     $.get('/refresh_logged_friends/', function(data){
         data = $.parseJSON(data);
-        var ul = $('ul .thumbnails').html('');
+        console.log(data);
+        var ul = $('.thumbnails');
+        ul.html('<li class="span1"></li>');
         for(d in data){
             var line = '<li class="span2"> <div class="thumbnail"><img src="'+data[d].pic_square;
             line += '" class="small_photo" />'+data[d].name+'<div class="caption"><p>Status: Online</p><p><a id="'+data[d].friend_id;
