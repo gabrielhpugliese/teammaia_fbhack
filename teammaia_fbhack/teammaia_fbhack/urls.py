@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
+from djang.conf import settings
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -20,5 +21,7 @@ urlpatterns = patterns('',
     url(r'^get_lock/', 'facecards.views.get_lock', name='get_lock'),
     url(r'^resolve_round/', 'facecards.views.resolve_round', name='resolve_round'),
     
+    url(r'^static/(?P<path>.*)$', 'django.views.static.serve', 
+        {'document_root': settings.STATIC_ROOT}),
     url(r'^admin/', include(admin.site.urls)),
 )
