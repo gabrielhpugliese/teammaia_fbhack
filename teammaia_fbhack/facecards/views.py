@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from facebook_client import FacebookClient
 from django.views.decorators.csrf import csrf_exempt
 from models import Game
+import simplejson
 
 @facebook_auth_required
 def canvas(request):
@@ -40,28 +41,44 @@ def keep_alive(request):
 @csrf_exempt
 @login_required
 def game_request(request):
-
     friend_id = request.POST["friend"]
     logging.info(friend_id)
     
-    playerOnGame = len(Game.objects.filter(player1__pk=friend_id))
-    playerOnGame += len(Game.objects.filter(player2__pk=friend_id))
+    playerOnGame = len(Game.objects.filter(player1__pk=friend_id, status='p'))
+    playerOnGame += len(Game.objects.filter(player2__pk=friend_id, status='p'))
     
     if playerOnGame != 0:
         return HttpResponse('Falha')
     
     logging.info("usuario disponivel")
     
-    logging.info(request.user.pk)
-    
-    u1 = User.objects.filter(pk=request.user.pk)[0]
+    u1 = request.user
     u2 = User.objects.filter(pk=friend_id)[0]
-    g = Game(player1 = u1, player2 = u2, status='w').save()
-    
+
+    try:
+        game = Game(player1 = u1, player2 = u2, status='w').save()
+    except:
+        return HttpResponse('Falha')
+        
     return HttpResponse('OK')
 
+@login_required
+def refresh_games(request):
+    games_waiting = Game.objects.filter(player2=request.user, status='w')
+    if games_waiting:
+        opponent = games_waiting[0].player1
+        opponent_name = '%s %s' % (opponent.first_name, opponent.last_name)
+        game = {'opponent_name': opponent_name,
+                'game_pk': games_waiting[0].pk}
+        
+        return HttpResponse(simplejson.dumps(game))
+    return HttpResponse('NaoTem')
 
-
+@login_required
+def play(request):
+    
+    return render_to_response('play.html', template_context,
+                              context_instance=RequestContext(request))
 
 
 
