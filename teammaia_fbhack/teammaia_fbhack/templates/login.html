@@ -15,11 +15,11 @@
     <p class="download-info well">
        {% if error %}
            {% if error == 'AUTH_FAILED' %}
-            	<p>Authentication failed</p>
+            	<div class="alert alert-error">Authentication failed</div>
            {% else %}{% if error == 'AUTH_DISABLED' %}
-              	<p>Your account is disabled</p>
+              	<div class="alert alert-error">Your account is disabled</div>
            {% else %}{% if error == 'AUTH_DENIED' %}
-                <p>You did not allow access</p>
+                <div class="alert alert-error">You did not allow access</div>
            {% endif %}{% endif %}{% endif %}
         {% else %}
             <a href="{{ auth_url }}" class="btn btn-primary btn-large">Login with Facebook</a>
