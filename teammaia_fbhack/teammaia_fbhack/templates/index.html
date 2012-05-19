@@ -44,7 +44,19 @@
     				<div class="active item">
     				    <ul class="thumbnails">
                         <!-- lista dos amigos aqui -->
+                            <li class="span1">
+                            </li>
                             {% for friend in logged_friends %}
+                            {% if forloop.counter0|divisibleby:"4" %}
+                            {% if forloop.counter0 != 0 %}
+                            </ul>
+                            </div>
+                            <div class="item">
+                            <ul class="thumbnails">
+                            <li class="span1">
+                            </li>
+                            {% endif %}
+                            {% endif %}
                             <li class="span2">
                  				<div class="thumbnail">
 		    					<img src="{{ friend.get_profile.pic_square }}" class="small_photo" />{{ friend.first_name }} {{ friend.last_name }}
@@ -68,15 +80,10 @@
                                 </div>
                                 </div>
                             </li>
-                           -->
-                            
-                            
-                        </ul>
-               	
+                           -->      
+                        </ul>    	
     				</div>
-    				<div class="item">Lista 2</div>
-    				<div class="item">Lista 3</div></div>
-  				</div>
+    				</div>
   			<!-- Carousel nav -->
   			<a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
   			<a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
