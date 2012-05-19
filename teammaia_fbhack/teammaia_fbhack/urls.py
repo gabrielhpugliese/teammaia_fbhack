@@ -24,5 +24,6 @@ urlpatterns = patterns('',
     
     url(r'^static/(?P<path>.*)$', 'django.views.static.serve', 
         {'document_root': settings.STATIC_ROOT}),
+    url(r'^verify_in_game', 'facecards.views.verify_in_game', name='verify_in_game'),
     url(r'^admin/', include(admin.site.urls)),
 )

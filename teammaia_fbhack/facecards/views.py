@@ -58,7 +58,7 @@ def ajax_update_logged_friends(request):
     
 @login_required
 def keep_alive(request):
-    request.session.set_expiry(60)
+    request.session.set_expiry(6000)
     
     return HttpResponse('OK')
 
@@ -290,4 +290,17 @@ def get_lock(request):
         return HttpResponse(simplejson.dumps({'status': 'OK', 'card': card}))
     
     return HttpResponse(simplejson.dumps({'status': 'AindaNao'}))
-      
+
+
+@login_required
+def verify_in_game(request):
+    games_in = Game.objects.filter(player1=request.user, status='p') 
+    games_in2 = Game.objects.filter(player2=request.user, status='p')
+    for game in games_in:
+        game.status = 'f'
+        game.save()
+    for game in games_in2:
+        game.status = 'f'
+        game.save()
+    return HttpResponse('OK')
+    

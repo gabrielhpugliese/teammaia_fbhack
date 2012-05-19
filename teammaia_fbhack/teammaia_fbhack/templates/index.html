@@ -133,10 +133,16 @@
 <script>
 $(document).ready(function(){
 	setTimeout('refresh_games()', 1*1000);
-	setTimeout('refresh_logged_friends()', 5*1000);
+	setTimeout('refresh_logged_friends()', 1*1000);
+	setTimeout('verify_in_game()', 1*1000);
 });
 
+function verify_in_game(){
+	$.get('/verify_in_game/');
+}
+
 function refresh_logged_friends(){
+	setTimeout('refresh_logged_friends()', 1*1000);
     $.get('/refresh_logged_friends/', function(data){
         data = $.parseJSON(data);
         var ul = $('ul .thumbnails').html('');
@@ -147,7 +153,7 @@ function refresh_logged_friends(){
             ul.append(line);
 
         }
-    	setTimeout('refresh_logged_friends()', 5*1000);
+    	
     });
 }
 
