@@ -155,28 +155,29 @@ function refresh_logged_friends(){
             ul.append(line);
 
         }
+        $(".btn-mini").click(function(event){
+		    event.preventDefault();
+		    console.log("clicado");
+		    //var id = $('input[name="friendRadio"]:checked').parent()[0].id;
+		    var id = $(this).attr("id");
+		    
+		    console.log(id);
+		    $.post('/game_request/',{friend : id}, function(data) {
+		        console.log(data)
+		        if(data == "OK"){
+		            $('#game_request_popup').html(data);
+		            refresh_my_challenge();
+		        }
+		        else {
+		            $('#game_request_popup').html(data);
+		        }
+		    });
+		});
     	
     });
 }
 
-$(".btn-mini").click(function(event){
-    event.preventDefault();
-    console.log("clicado");
-    //var id = $('input[name="friendRadio"]:checked').parent()[0].id;
-    var id = $(this).attr("id");
-    
-    console.log(id);
-    $.post('/game_request/',{friend : id}, function(data) {
-        console.log(data)
-        if(data == "OK"){
-            $('#game_request_popup').html(data);
-            refresh_my_challenge();
-        }
-        else {
-            $('#game_request_popup').html(data);
-        }
-    });
-});
+
 
 
 </script>
