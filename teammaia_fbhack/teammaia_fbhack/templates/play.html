@@ -34,15 +34,15 @@
       <div class="row">
          <div class="span5 offset1">
             <div id='player1'>
-            <img alt="" src="{{ me.get_profile.pic_square }}"><br /><br />
+            <img alt="" src="{{ me.get_profile.pic_square }}"><br />
             <h4>{{ me.get_full_name }}</h4>
             <br /><br /><br />
             <ul class="thumbnails">
             <li class="span3">
             </li>
             <li class="span2">
-            <div class="thumbnail">				
-				<img src=''/>
+            <div class="thumbnail">
+                <img class='friend' src='' />		
 				<h3></h3>
 				<a class="attr1"></a><br />
 				<a class="attr2"></a>
@@ -61,19 +61,45 @@
             <ul class="thumbnails">
             <li class="span2">
             <div class="thumbnail">
-         	<img src=''/>
+            <img class='friend' src='' />
 				<h3></h3>
 				<a >Friends: ?</a><br />
 				<a >Likes: ?</a>
-			</div>
 			</div>
             </li>
 			</ul>
           	</div>
          </div>
       </div>
+      <div class="row">
+      <div class="span1 offset1">
       <a id='finish-button' class="btn btn-small" href=''>Finish</a>
+      </div>
+      </div>
    </div>
+
+<!-- 
+<div id='player1'>
+	<img src='{{ me.get_profile.pic_big }}' />
+	<h2 class='turn'></h2>
+	<h2 class='cards'></h2>
+	<img class='friend' src='' />
+	<h3></h3>
+	<a class="attr1"></a>
+	<a class="attr2"></a>
+	
+</div>
+<div id='player2'>
+	<img src='{{ opponent.get_profile.pic_big }}' />
+	<h2 class='turn'></h2>
+	<h2 class='cards'></h2>
+	<img class='friend' src='' />
+	<h3></h3>
+	<a class="attr1"></a>
+	<a class="attr2"></a>
+</div>
+<a id='finish-button' href=''>Finish</a>
+-->
 
 <script>
 $(document).ready(function(){
@@ -104,6 +130,7 @@ function check_finish(){
 function get_next_card(){
 	var player = $('#player1');
 	var data;
+	hide_opponent_card();
 	$.get('/get_next_card/', {game_pk: {{ game_pk }}}, function(resp){
 		data = $.parseJSON(resp);
 		console.log('VEIO DO GET_NEXT_CARD');
@@ -129,14 +156,38 @@ function get_next_card(){
 	});
 }
 
+function show_opponent_card(card){
+    var player = $('#player2');
+    var opponent_deck_len = 40 - $('#player1 .cards').html().split(':')[1];
+    player.find('.cards').html('Cards Remaining:'+opponent_deck_len);
+	player.find('.friend').attr('src', card.pic_square);
+	player.find('h3').html(card.name);
+	player.find('.attr1').html('Friends: '+card.attr1);
+	player.find('.attr2').html('Likes: '+card.attr2);
+	setTimeout('get_next_card()', 3*1000);
+}
+
+function hide_opponent_card(){
+	var player = $('#player2');
+	var opponent_deck_len = 40 - $('#player1 .cards').html().split(':')[1];
+    player.find('.cards').html('Cards Remaining:'+opponent_deck_len);
+    player.find('.cards').html('');
+	player.find('.friend').attr('src', '/static/img/question.png');
+	player.find('h3').html('');
+	player.find('.attr1').html('');
+	player.find('.attr2').html('');
+}
+
 function resolve_round(){
 	$('a').click(function(event){
 		event.preventDefault();
 		$.get('/resolve_round/', {attr: $(this).attr('class'), game_pk: {{ game_pk }} }, function(data){
+			data = $.parseJSON(data);
 			console.log('EH NOIZ');
-			if(data == 'OK')
-				get_next_card();
-			else if (data == 'Ganhei'){
+			if(data.status == 'OK'){
+				show_opponent_card(data.card);
+			}
+			else if (data.status == 'Ganhei'){
 				alert('Você ganhou! :)');
 				self.location = '/canvas/';
 			}
@@ -148,10 +199,11 @@ function resolve_round(){
 function get_lock(){
 	setTimeout('get_lock()', 1*1000);
 	$.get('/get_lock', { game_pk: {{ game_pk }} }, function(data){
-		if(data == 'OK'){
+		data = $.parseJSON(data);
+		if(data.status == 'OK'){
 			console.log('VEIO DO GET_LOCK');
-			get_next_card();
-		} else if (data == 'Perdi') {
+			show_opponent_card(data.card);
+		} else if (data.status == 'Perdi') {
 			alert('Você Perdeu :(');
 			self.location = '/canvas/';
 		}
