@@ -179,9 +179,7 @@ AUTHENTICATION_BACKENDS = (
 FACEBOOK_APP_ID = '173967789398684'
 FACEBOOK_APP_SECRET = '33148584b87a74a533999f1e58e1c7b2'
 FACEBOOK_REDIRECT_URI = 'http://127.0.0.1:8000/login/' # <<-- This really must be /login/
-FACEBOOK_APP_SCOPE = ','.join(['user_relationships', 
-                               'friends_birthday',
-                               'email']) # You can change to facebook scopes you want to use
+FACEBOOK_APP_SCOPE = ','.join(['friends_likes']) # You can change to facebook scopes you want to use
 
 GRAPH_API_URL = 'https://graph.facebook.com/'
 MAIN_URL = '/canvas/' # This is the index of your facebook app

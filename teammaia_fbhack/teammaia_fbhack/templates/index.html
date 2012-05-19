@@ -13,7 +13,7 @@
 		</li>
 	{% endfor %}
 	</ul>
-	<a id=play-button href="">Jogar</a>
+	<a id=play-button href="">Challenge</a>
 	
 </div>
 <div id="game_list">
@@ -23,6 +23,10 @@
 </div>
 
 <script>
+$(document).ready(function(){
+	setTimeout('refresh_games()', 1*1000);
+});
+
 $("#play-button").click(function(event){
     event.preventDefault();
     console.log("clicado");
@@ -32,6 +36,7 @@ $("#play-button").click(function(event){
         console.log(data)
         if(data == "OK"){
             $('#game_request_popup').html(data);
+            refresh_my_challenge();
         }
         else {
             $('#game_request_popup').html(data);
