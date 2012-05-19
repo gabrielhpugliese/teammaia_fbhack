@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block extra_body %}
+<h1>Teste</h1>
+
+ 	<div class="row">
+    	<div class="span8 offset2">
+    		<div class="hero-unit">
+    <h1>Heading</h1>
+    <p>Tagline</p>
+    <p>
+    <a class="btn btn-primary btn-large">
+    Learn more
+    </a>
+    </p>
+    		</div>
+    	</div>
+    </div>
+  {% if error %}
+      {% if error == 'AUTH_FAILED' %}
+          <p>Authentication failed</p>
+      {% else %}{% if error == 'AUTH_DISABLED' %}
+          <p>Your account is disabled</p>
+      {% else %}{% if error == 'AUTH_DENIED' %}
+          <p>You did not allow access</p>
+       {% endif %}{% endif %}{% endif %}
+  {% else %}
+    <a href="{{ auth_url }}">
+      <img src="https://developers.facebook.com/images/devsite/login-button.png"/>
+    </a>
+  {% endif %}
+  
+{% endblock %}
