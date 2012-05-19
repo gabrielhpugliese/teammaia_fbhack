@@ -10,3 +10,5 @@ cd teammaia_fbhack
 python manage.py syncdb
 
 python manage.py runserver
+
+test
