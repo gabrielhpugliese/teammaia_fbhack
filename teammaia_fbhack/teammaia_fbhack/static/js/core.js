@@ -28,7 +28,7 @@ function refresh_games() {
 			console.log(data);
 			var achou = false;
 			table.find('tbody').find('tr').find('td').each(function(i, l){
-			    if (i % 3 == 0) {
+			    if (i % 2 == 0) {
 			    	console.log(data.opponent_name);
 				    if($(this).text().trim() == data.opponent_name){
 					    achou = true;
@@ -37,7 +37,7 @@ function refresh_games() {
 			});
 			if(achou == false){
 				//table.append('<li>'+data.opponent_name+'</li><a href="/play/'+data.game_pk+'">Acept</a>');
-			    table.find('tbody').append('<tr><td>'+data.opponent_name+'</td><td>10</td><td><a href="/play/'+data.game_pk+'">Accept</a></td></tr>');
+			    table.find('tbody').append('<tr><td>'+data.opponent_name+'</td><td><a href="/play/'+data.game_pk+'">Accept</a></td></tr>');
 			}
 		}
 	});

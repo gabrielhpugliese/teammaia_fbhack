@@ -216,10 +216,10 @@ def resolve_round(request):
     card = None
     if my_card.__getattribute__(attr) >= opponent_card.__getattribute__(attr):
         
-        my_card.order = my_last_card.order + 1
+        my_card.order = my_last_card.order + 2
         my_card.save()
         logging.debug('MY_CARD_ORDER = %s' % my_card.order)
-        new_card = Card(player=request.user,order=my_last_card.order + 2,
+        new_card = Card(player=request.user,order=my_last_card.order + 1,
                         attr1=opponent_card.attr1, attr2=opponent_card.attr2,
                         name=opponent_card.name,pic_square=opponent_card.pic_square,
                         game=game) 
@@ -271,12 +271,12 @@ def get_lock(request):
         game.save()
         my_deck = Card.objects.filter(player=request.user, game__pk=game_pk)
         new_card = None
+        opponent_user = None
+        if game.player1 == request.user:
+            opponent_user = game.player2
+        else:
+            opponent_user = game.player1
         if game.turn != request.user:
-            opponent_user = None
-            if game.player1 == request.user:
-                opponent_user = game.player2
-            else:
-                opponent_user = game.player1
             new_card = max(Card.objects.filter(player=opponent_user, game__pk=game_pk), key=return_order)
         else:
             new_card = max(Card.objects.filter(player=request.user, game__pk=game_pk), key=return_order)

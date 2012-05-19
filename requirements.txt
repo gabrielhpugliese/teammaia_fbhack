@@ -1,6 +1,0 @@
-Django==1.4
--e git+git@github.com:digitalinc/django-fukinbook.git@991790e267d73c7ed432e043327f080e25992618#egg=django_fukinbook-dev
-psycopg2==2.4.5
-simplejson==2.5.2
-wsgiref==0.1.2
-gunicorn==0.14.2
