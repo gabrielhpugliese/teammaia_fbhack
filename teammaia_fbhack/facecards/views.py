@@ -1,3 +1,4 @@
+from django.forms.models import model_to_dict
 from django.http import HttpResponse
 from django_fukinbook.decorators import facebook_auth_required
 from django.contrib.sessions.models import Session
@@ -13,9 +14,9 @@ from django.views.decorators.csrf import csrf_exempt
 from models import Game, Card
 import simplejson
 import random
+from django.core import serializers
 
-@facebook_auth_required
-def canvas(request):
+def update_logged_friends_list(access_token):
     sessions = Session.objects.filter(expire_date__gte=timezone.now())
     
     logged_friends = []
@@ -23,17 +24,37 @@ def canvas(request):
         pks = [s.get_decoded().get('_auth_user_id') for s in sessions]  
         users = [User.objects.get(pk=p) for p in pks if p != None]
         
-        client = FacebookClient(request.access_token)
+        client = FacebookClient(access_token)
         my_friends = client.get_my_friends()
         my_friends_uids = [friend.get('uid') for friend in my_friends]
         
         for user in users:
             if int(user.username) in my_friends_uids:
                 logged_friends.append(user)
+    return logged_friends
     
+
+
+@facebook_auth_required
+def canvas(request):
+    logged_friends = update_logged_friends_list(request.access_token)
     template_context = {'logged_friends': logged_friends}
     return render_to_response('index.html', template_context,
                               context_instance=RequestContext(request))
+
+@facebook_auth_required
+def ajax_update_logged_friends(request):
+    logged_friends = update_logged_friends_list(request.access_token)
+    
+    users = []
+    for user in logged_friends:
+        user_name = '{0} {1}'.format(user.first_name, user.last_name)
+        users.append({'friend_id': user.pk, 'name': user_name, 'pic_square': user.get_profile().pic_square})
+ 
+    
+    data = simplejson.dumps(users)    
+    return HttpResponse(data)
+        
     
 @login_required
 def keep_alive(request):
@@ -269,4 +290,4 @@ def get_lock(request):
         return HttpResponse(simplejson.dumps({'status': 'OK', 'card': card}))
     
     return HttpResponse(simplejson.dumps({'status': 'AindaNao'}))
-        
+      
