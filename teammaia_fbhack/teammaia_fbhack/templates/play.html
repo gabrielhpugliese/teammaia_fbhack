@@ -3,15 +3,17 @@
 {% block extra_body %}
 
 <div id='player1'>
+	<img src='{{ me.get_profile.pic_big }}' />
 	<h2 class='turn'></h2>
 	<h2 class='cards'></h2>
-	<img src='' />
+	<img class='friend' src='' />
 	<h3></h3>
 	<a class="attr1"></a>
 	<a class="attr2"></a>
 	
 </div>
 <div id='player2'>
+	<img src='{{ opponent.get_profile.pic_big }}' />
 </div>
 <a id='finish-button' href=''>Finish</a>
 <script>
@@ -19,6 +21,7 @@ $(document).ready(function(){
 	setTimeout('check_finish()', 1*1000);
 	setTimeout('get_lock()', 1*1000);
 	get_next_card();
+	resolve_round();
 });
 
 $("#finish-button").click(function(event){
@@ -44,9 +47,10 @@ function get_next_card(){
 	var data;
 	$.get('/get_next_card/', {game_pk: {{ game_pk }}}, function(resp){
 		data = $.parseJSON(resp);
+		console.log('VEIO DO GET_NEXT_CARD');
 		console.log(data);
 		player.find('.cards').html('Cards Remaining:'+data.my_deck_len);
-		player.find('img').attr('src', data.pic_square);
+		player.find('.friend').attr('src', data.pic_square);
 		player.find('h3').html(data.name);
 	}).success(function(){
 		$.get('/get_turn/{{ game_pk }}', function(resp){
@@ -69,10 +73,15 @@ function get_next_card(){
 function resolve_round(){
 	$('a').click(function(event){
 		event.preventDefault();
-		console.log('NAO EH NOIZ');
-		$.get('/resolve_round/', {attr: $(this).attr('id'), game_pk: {{ game_pk }} }, function(){
+		$.get('/resolve_round/', {attr: $(this).attr('class'), game_pk: {{ game_pk }} }, function(data){
 			console.log('EH NOIZ');
-			get_next_card();
+			if(data == 'OK')
+				get_next_card();
+			else if (data == 'Ganhei'){
+				alert('Você ganhou! :)');
+				self.location = '/canvas/';
+			}
+				
 		});
 	});
 }
@@ -81,9 +90,13 @@ function get_lock(){
 	setTimeout('get_lock()', 1*1000);
 	$.get('/get_lock', { game_pk: {{ game_pk }} }, function(data){
 		if(data == 'OK'){
+			console.log('VEIO DO GET_LOCK');
 			get_next_card();
+		} else if (data == 'Perdi') {
+			alert('Você Perdeu :(');
+			self.location = '/canvas/';
 		}
-	})
+	});
 }
 </script>
 {% endblock %}

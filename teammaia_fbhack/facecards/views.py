@@ -21,7 +21,7 @@ def canvas(request):
     logged_friends = []
     if sessions: 
         pks = [s.get_decoded().get('_auth_user_id') for s in sessions]  
-        users = [User.objects.get(pk=p) for p in pks]
+        users = [User.objects.get(pk=p) for p in pks if p != None]
         
         client = FacebookClient(request.access_token)
         my_friends = client.get_my_friends()
@@ -118,9 +118,13 @@ def play(request, game_pk):
             game.turn = game.player2
         game.save()
     
-    
+    if game.player1 == request.user:
+        opponent_user = game.player2
+    else:
+        opponent_user = game.player1
         
-    template_context = {'game_pk': game_pk}
+    template_context = {'game_pk': game_pk, 'me': request.user, 
+                        'opponent': opponent_user}
     return render_to_response('play.html', template_context,
                               context_instance=RequestContext(request))
 
@@ -171,7 +175,7 @@ def resolve_round(request):
     attr = request.GET.get('attr')
     game_pk = request.GET.get('game_pk')
     game = Game.objects.get(pk=game_pk)
-    if game.turn != request.user:
+    if game.turn != request.user or game.lock == True:
         return HttpResponse('Falha')
     my_deck = Card.objects.filter(player=request.user, game=game)
     opponent_user = None
@@ -187,31 +191,55 @@ def resolve_round(request):
     my_last_card = max(my_deck, key=return_order)
     opponent_last_card = max(opponent_deck, key=return_order)
     
+    logging.debug('MY_LAST_CARD = %s' % my_last_card)
+    logging.debug('OPPONENT_LAST_CARD = %s' % opponent_last_card)
     if my_card.__getattribute__(attr) >= opponent_card.__getattribute__(attr):
         my_card.order = my_last_card.order + 1
         my_card.save()
-        opponent_card.user = request.user
-        opponent_card.order = my_last_card.order + 2
-        opponent_card.save()
+        logging.debug('MY_CARD_ORDER = %s' % my_card.order)
+        new_card = Card(player=request.user,order=my_last_card.order + 2,
+                        attr1=opponent_card.attr1, attr2=opponent_card.attr2,
+                        name=opponent_card.name,pic_square=opponent_card.pic_square,
+                        game=game) 
+        new_card.save()
+        opponent_card.delete()
+        logging.debug('OPPONENT_CARD_ORDER = %s' % new_card.order)
         game.turn = request.user
     else:
         opponent_card.order = opponent_last_card.order + 1
         opponent_card.save()
-        my_card.user = opponent_user
-        my_card.order = opponent_last_card.order + 2
-        my_card.save()
+        new_card = Card(player=opponent_user,order=opponent_last_card.order + 2,
+                        attr1=my_card.attr1, attr2=my_card.attr2,
+                        name=my_card.name,pic_square=my_card.pic_square,
+                        game=game)
+        new_card.save()
+        logging.debug('OPPONENT_CARD_ORDER = %s' % opponent_card.order)
+        my_card.delete()
+        logging.debug('MY_CARD_ORDER = %s' % new_card.order)
         game.turn = opponent_user
         
+    game.last_turn = request.user    
     game.lock = True
     game.save()
+    
+    my_deck = Card.objects.filter(player=request.user, game=game)
+    if len(my_deck) == 30:
+        game.status = 'f'
+        game.save()
+        return HttpResponse('Ganhei')
+    
     return HttpResponse('OK')
     
 @login_required
 def get_lock(request):
     game_pk = request.GET.get('game_pk')
     game = Game.objects.get(pk=game_pk)
-    if game.lock == True:
-        game.lock == False
+    if game.last_turn != request.user and game.lock == True:
+        game.lock = False
+        game.save()
+        my_deck = Card.objects.filter(player=request.user, game__pk=game_pk)
+        if len(my_deck) == 10:
+            return HttpResponse('Perdi')
         return HttpResponse('OK')
     
     return HttpResponse('AindaNao')
