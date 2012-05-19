@@ -10,7 +10,7 @@ class Game(models.Model):
     
     player1 = models.OneToOneField(User, related_name='player1')
     player2 = models.OneToOneField(User, related_name='player2')
-    status = models.CharField(max_length=1, verbose_name='Game status')
+    status = models.CharField(max_length=1, choices=STATUS, verbose_name='Game status')
     
 class Round(models.Model):
     game = models.ForeignKey(Game)
