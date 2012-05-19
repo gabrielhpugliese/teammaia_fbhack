@@ -8,9 +8,12 @@ class Game(models.Model):
     STATUS = ((PLAYING, u'Playing'), (WAITING, u'Waiting'), 
               (FINISHED, u'Finished'),)
     
-    player1 = models.OneToOneField(User, related_name='player1')
-    player2 = models.OneToOneField(User, related_name='player2')
+    player1 = models.ForeignKey(User, related_name='player1')
+    player2 = models.ForeignKey(User, related_name='player2')
+    turn = models.ForeignKey(User, related_name='turn', default=None, null=True)
+    last_turn = models.ForeignKey(User, related_name='last_turn', default=None, null=True)
     status = models.CharField(max_length=1, choices=STATUS, verbose_name='Game status')
+    lock = models.BooleanField(default=False)
     
 class Round(models.Model):
     game = models.ForeignKey(Game)
@@ -18,3 +21,18 @@ class Round(models.Model):
     active_player_card = models.CharField(max_length=50)
     opponent_player_card = models.CharField(max_length=50)
     winner = models.OneToOneField(User, related_name='winner')
+
+class Card(models.Model):
+    game = models.ForeignKey(Game)
+    player = models.ForeignKey(User)
+    order = models.IntegerField()
+    name = models.CharField(max_length=150)
+    attr1 = models.IntegerField()
+    attr2 = models.IntegerField()
+    pic_square = models.URLField()
+    
+    def __unicode__(self):
+        return '{0}'.format(self.order)
+    
+    
+    
