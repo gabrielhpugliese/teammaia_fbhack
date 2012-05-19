@@ -122,7 +122,12 @@
 		</li>
 	{% endfor %}
 	</ul>
+<<<<<<< HEAD
+	<a id=play-button href="">Challenge</a>
+	
+=======
 	<a id=play-button href="">Jogar</a>	
+>>>>>>> ffee138f019e6fb57f4578e427737d2898ea8872
 </div>
 <div id="game_list">
     <ul>
@@ -132,6 +137,10 @@
 -->
 
 <script>
+$(document).ready(function(){
+	setTimeout('refresh_games()', 1*1000);
+});
+
 $(".btn-mini").click(function(event){
     event.preventDefault();
     console.log("clicado");
@@ -143,6 +152,7 @@ $(".btn-mini").click(function(event){
         console.log(data)
         if(data == "OK"){
             $('#game_request_popup').html(data);
+            refresh_my_challenge();
         }
         else {
             $('#game_request_popup').html(data);

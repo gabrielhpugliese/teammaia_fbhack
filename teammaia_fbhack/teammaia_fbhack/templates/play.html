@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block extra_body %}
+
+<div id='player1'>
+</div>
+<div id='player2'>
+</div>
+<a id='finish-button' href=''>Finish</a>
+<script>
+$(document).ready(function(){
+	setTimeout('check_finish()', 1*1000);
+	get_next_card();
+});
+
+$("#finish-button").click(function(event){
+    event.preventDefault();
+    console.log("clicado");
+    $.post('/finish_game/',{ game_pk: {{ game_pk }} }, function(data) {
+        console.log(data);
+        self.location = '/canvas/';
+    });
+});
+
+function check_finish(){
+	setTimeout('check_finish()', 1*1000);
+	$.get('/check_finish/{{ game_pk }}', function(data){
+		if(data == 'OK'){
+			self.location = '/canvas/';
+		}
+	})
+}
+
+function get_next_card(){
+	$.get('/get_next_card/', {game_pk: {{ game_pk }}}, function(data){
+		data = $.parseJSON(data);
+		console.log(data);
+		var player = $('#player1');
+		player.append('<h2>Cards Remaining:'+data.deck_len+'</h2>');
+		player.append('<img src="'+data.pic_square+'" />');
+		player.append('<h3>'+data.name+'</h3>');
+		player.append('<a href="">Friends: '+data.attr1+'</a><br/>');
+		player.append('<a href="">Likes: '+data.attr2+'</a>');
+	});
+}
+</script>
+{% endblock %}
