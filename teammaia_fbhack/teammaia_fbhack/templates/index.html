@@ -2,6 +2,7 @@
 
 {% block title %} Facecards - {{ user.get_full_name }} profile page {% endblock %}
 
+
 {% block extra_body %}
    <div class="navbar navbar-fixed-top facecards-navbar">
        <div class="navbar-inner">
@@ -43,6 +44,19 @@
     				<div class="active item">
     				    <ul class="thumbnails">
                         <!-- lista dos amigos aqui -->
+                            {% for friend in logged_friends %}
+                            <li class="span2">
+                 				<div class="thumbnail">
+		    					<img src="{{ friend.get_profile.pic_square }}" class="small_photo" />{{ friend.first_name }} {{ friend.last_name }}
+							    <div class="caption">
+							    <p>Status: Online</p>
+							    <p><a id="{{friend.id}}" class="btn btn-mini" href=".">Invite to play</a></p>
+							    </div>
+							</li>
+							{% empty %}
+							<p>No friends registred</p>
+							{% endfor %}
+                 			<!-- 
                  			<li class="span2">
                  				<div class="thumbnail">
                                 <a href="." title="{{ book.book.title }}">
@@ -54,50 +68,9 @@
                                 </div>
                                 </div>
                             </li>
-                            <li class="span2">
-                 				<div class="thumbnail">
-                                <a href="." title="{{ book.book.title }}">
-			                      <img src="{{ STATIC_URL }}/img/teste_zuck.jpg" class="small_photo" >
-                                </a>
-                                <div class="caption">
-                                  	<p>Status: Online</p>
-                 				    <p><a class="btn btn-mini" href=".">Invite to play</a></p>
-                                </div>
-                                </div>
-                            </li>
-                            <li class="span2">
-                 				<div class="thumbnail">
-                                <a href="." title="{{ book.book.title }}">
-			                      <img src="{{ STATIC_URL }}/img/teste_zuck.jpg" class="small_photo" >
-                                </a>
-                                <div class="caption">
-                                  	<p>Status: Online</p>
-                 				    <p><a class="btn btn-mini" href=".">Invite to play</a></p>
-                                </div>
-                                </div>
-                            </li>
-                            <li class="span2">
-                 				<div class="thumbnail">
-                                <a href="." title="{{ book.book.title }}">
-			                      <img src="{{ STATIC_URL }}/img/teste_zuck.jpg" class="small_photo" >
-                                </a>
-                                <div class="caption">
-                                  	<p>Status: Online</p>
-                 				    <p><a class="btn btn-mini" href=".">Invite to play</a></p>
-                                </div>
-                                </div>
-                            </li>
-                            <li class="span2">
-                 				<div class="thumbnail">
-                                <a href="." title="{{ book.book.title }}">
-			                      <img src="{{ STATIC_URL }}/img/teste_zuck.jpg" class="small_photo" >
-                                </a>
-                                <div class="caption">
-                                  	<p>Status: Online</p>
-                 				    <p><a class="btn btn-mini" href=".">Invite to play</a></p>
-                                </div>
-                                </div>
-                            </li>
+                           -->
+                            
+                            
                         </ul>
                	
     				</div>
@@ -122,11 +95,55 @@
          		<div class="page-header">
             		<h3>List active rounds</h3>
             	</div>
-            	<table class="table table-striped">
+            	<table id="call_to_play" class="table table-striped">
             	<thead><tr><th>Oponent</th><th>Round</th><th>Status</th></tr></thead>
-            	<tbody><tr><td>Alice</td><td>10</td><td>Active</td></tr></tbody>
+            	<tbody>
+            	</tbody>
             	</table>
             </div>
          </div>   	
       </div>
+
+<!-- 
+<div id='friends'>
+	<h2>Friends</h2>
+	<ul>
+	{% for friend in logged_friends %}
+		<li id={{friend.id}}>
+		    <input type="radio" name="friendRadio"/>
+		    <img src='{{ friend.pic_square }}' />{{ friend.first_name }} {{ friend.last_name }}
+		</li>
+	{% endfor %}
+	</ul>
+	<a id=play-button href="">Jogar</a>	
+</div>
+<div id="game_list">
+    <ul>
+    	
+    </ul>
+</div>
+-->
+
+<script>
+$(".btn-mini").click(function(event){
+    event.preventDefault();
+    console.log("clicado");
+    //var id = $('input[name="friendRadio"]:checked').parent()[0].id;
+    var id = $(this).attr("id");
+    
+    console.log(id);
+    $.post('/game_request/',{friend : id}, function(data) {
+        console.log(data)
+        if(data == "OK"){
+            $('#game_request_popup').html(data);
+        }
+        else {
+            $('#game_request_popup').html(data);
+        }
+    });
+});
+
+
+</script>
 {% endblock %}
+

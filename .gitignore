@@ -29,5 +29,9 @@ pip-log.txt
 #Project
 .project
 .pydevproject
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 8efda2e009e2a7fccad17835c7095eb6c83648b7
 *.db
 django_fukinbook/
