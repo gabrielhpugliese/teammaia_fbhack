@@ -176,7 +176,7 @@ def resolve_round(request):
     game_pk = request.GET.get('game_pk')
     game = Game.objects.get(pk=game_pk)
     if game.turn != request.user or game.lock == True:
-        return HttpResponse('Falha')
+        return HttpResponse(simplejson.dumps({'status': 'Falha'}))
     my_deck = Card.objects.filter(player=request.user, game=game)
     opponent_user = None
     if game.player1 == request.user:
@@ -191,9 +191,10 @@ def resolve_round(request):
     my_last_card = max(my_deck, key=return_order)
     opponent_last_card = max(opponent_deck, key=return_order)
     
-    logging.debug('MY_LAST_CARD = %s' % my_last_card)
-    logging.debug('OPPONENT_LAST_CARD = %s' % opponent_last_card)
+    new_card = None
+    card = None
     if my_card.__getattribute__(attr) >= opponent_card.__getattribute__(attr):
+        
         my_card.order = my_last_card.order + 1
         my_card.save()
         logging.debug('MY_CARD_ORDER = %s' % my_card.order)
@@ -205,6 +206,10 @@ def resolve_round(request):
         opponent_card.delete()
         logging.debug('OPPONENT_CARD_ORDER = %s' % new_card.order)
         game.turn = request.user
+        card = {'name': new_card.name,
+            'pic_square': new_card.pic_square,
+            'attr1': new_card.attr1,
+            'attr2': new_card.attr2}
     else:
         opponent_card.order = opponent_last_card.order + 1
         opponent_card.save()
@@ -217,18 +222,24 @@ def resolve_round(request):
         my_card.delete()
         logging.debug('MY_CARD_ORDER = %s' % new_card.order)
         game.turn = opponent_user
+        card = {'name': opponent_card.name,
+            'pic_square': opponent_card.pic_square,
+            'attr1': opponent_card.attr1,
+            'attr2': opponent_card.attr2}
         
     game.last_turn = request.user    
     game.lock = True
     game.save()
     
     my_deck = Card.objects.filter(player=request.user, game=game)
+    
     if len(my_deck) == 30:
         game.status = 'f'
         game.save()
-        return HttpResponse('Ganhei')
+        return HttpResponse(simplejson.dumps({'status': 'Ganhei', 'card': card}))
     
-    return HttpResponse('OK')
+    
+    return HttpResponse(simplejson.dumps({'status': 'OK', 'card': card}))
     
 @login_required
 def get_lock(request):
@@ -238,9 +249,24 @@ def get_lock(request):
         game.lock = False
         game.save()
         my_deck = Card.objects.filter(player=request.user, game__pk=game_pk)
+        new_card = None
+        if game.turn != request.user:
+            opponent_user = None
+            if game.player1 == request.user:
+                opponent_user = game.player2
+            else:
+                opponent_user = game.player1
+            new_card = max(Card.objects.filter(player=opponent_user, game__pk=game_pk), key=return_order)
+        else:
+            new_card = max(Card.objects.filter(player=request.user, game__pk=game_pk), key=return_order)
+            
+        card = {'name': new_card.name,
+                'pic_square': new_card.pic_square,
+                'attr1': new_card.attr1,
+                'attr2': new_card.attr2}
         if len(my_deck) == 10:
-            return HttpResponse('Perdi')
-        return HttpResponse('OK')
+            return HttpResponse(simplejson.dumps({'status': 'Perdi', 'card': card}))
+        return HttpResponse(simplejson.dumps({'status': 'OK', 'card': card}))
     
-    return HttpResponse('AindaNao')
+    return HttpResponse(simplejson.dumps({'status': 'AindaNao'}))
         
