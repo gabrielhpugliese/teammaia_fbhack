@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %} bigLib {% endblock %}
+
+{% block extra_body %}
+   <div class="navbar navbar-fixed-top">
+       <div class="navbar-inner">
+           <div class="container">
+                  <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> 
+                      <span class="icon-bar"></span> 
+                      <span class="icon-bar"></span> 
+                      <span class="icon-bar"></span> 
+                  </a> 
+                  <a class="brand" href="{% url login %}"> Facecards</a>
+                   <div class="nav-collapse pull-right">
+                   <ul class="nav">
+                   <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configurações da conta<b class="caret"></b></a>
+                      <ul class="dropdown-menu">
+                      	   <li><a href="{% url edit_profile username=user.username %}">Editar perfil</a></li>
+	                       <li><a href="{% url change_password %}">Alterar senha</a></li>
+	                       <li><a href="{% url change_email %}">Alterar email</a></li>
+	                       <li class="divider"></li>
+	                       <li><a href="{% url logout %}">Sair</a></li>
+                      </ul>
+                   </li>
+                </ul>
+                </div>
+                {% endif %}
+                {% endblock %}
+           </div>
+       </div>
+   </div>
+    
+   <div id="begin" class="container"> 
+   
+      <div class="row">
+         <div class="span8 offset2">
+      	  <div id="breadcrumb">
+	       {% block breadcrumb %}
+               <a href='{% url welcome %}'>Início</a>
+            {% endblock %}
+	      </div>
+	     </div>
+	  </div>
+      <br />
+      <div class="row">
+      <div class="span2">
+      	        
+      	             {% block menu %}
+			      <table align='center'>
+		            <tr>
+		                <td>
+		                    <a href="{% url profile user.username %}"><img src="{{ user.get_profile.get_url }}" class='photo' /></a>
+		                </td>
+		                <td style='vertical-align: middle'>
+		                    {{ user.first_name }}
+		                </td>
+		            </tr>
+		          </table>
+		          
+		                {% block options %}
+		              <ul class="nav nav-list">
+		                <li class="nav-header">Minha biblioteca</li>
+		                <li><a href="{% url profile username=user.username %}">Livros dos amigos</a></li>
+		                <li><a href="{% url all_my_books username=user.username %}">Meus livros</a></li>
+		                <li><a href="{% url my_cloud_tags username=user.username %}">Assuntos</a></li>
+		                <li><a href="{% url search_book %}">Adicionar livro</a></li>
+		                <li class="nav-header">Empréstimos</li>
+		                <li><a href="{% url loans_page %}">Ativos</a></li>
+		                <li><a href="{% url loans_history %}">Histórico</a></li>
+		                <li class="nav-header">Outros</li>          
+		                <li><a href="{% url register_book %}">Cadastre um livro</a></li>
+		                <li><a href="{% url invite %}">Convide um amigo</a></li>
+		              </ul>
+		                {% endblock %}
+		              
+		                {% endblock %}
+		      
+	        
+	        {% block left %}
+	        {% endblock %} 
+      </div>
+      <div class="span8">
+         {% block content %}
+	           Conteúdo Principal
+         {% endblock %}   
+      </div>
+      <div class="span2">
+      	    {% block right %}
+	        {% endblock %}  
+      </div>
+      </div>
+      
+   </div>
+
+     
+    <!--   footer must go outside container -->
+       <footer id="footer">
+         {% block footer %}
+           <a href="#">Política de privacidade</a> | <a href="#">Termos de uso</a>
+         {% endblock %}
+       </footer>
+	
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.js"></script>
+	<!-- <script type='text/javascript'>
+        $(document).ready(function(){
+            $('#configurations').click(function(){
+                var opt = $('#conf');
+                opt.slideToggle('fast');
+            });
+            $('#loans_req').click(function(){
+                var opt = $('#loan_list');
+                opt.slideToggle('fast');
+            });
+            $('#friends_req').click(function(){
+                var opt = $('#friend_list');
+                opt.slideToggle('fast');
+            });
+        });
+    </script> -->
+    <script type="text/javascript">
+		  var uvOptions = {};
+		  (function() {
+		    var uv = document.createElement('script'); uv.type = 'text/javascript'; uv.async = true;
+		    uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/Nm8oKmS03XloPlFB0htgsw.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(uv, s);
+		  })();
+	</script>
+	{% block java-script %}
+    
+    {% endblock %}
+</body>
+</html>

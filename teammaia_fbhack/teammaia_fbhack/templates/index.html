@@ -1,8 +1,110 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
+{% block title %} Facecards - {{ user.get_full_name }} profile page {% endblock %}
+
 
 {% block extra_body %}
+   <div class="navbar navbar-fixed-top facecards-navbar">
+       <div class="navbar-inner">
+           <div class="container">
+                  <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> 
+                      <span class="icon-bar"></span> 
+                      <span class="icon-bar"></span> 
+                      <span class="icon-bar"></span> 
+                  </a> 
+                  <a class="brand" href="{% url login %}">Facecards</a>
+                   <div class="nav-collapse pull-right">
+                   <ul class="nav">
+                   <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.get_full_name }}<b class="caret"></b></a>
+                      <ul class="dropdown-menu">
+                      	   <li><a href=".">Editar perfil</a></li>
+	                       <li><a href=".">Alterar senha</a></li>
+	                       <li><a href=".">Alterar email</a></li>
+	                       <li class="divider"></li>
+	                       <li><a href=".">Sair</a></li>
+                      </ul>
+                   </li>
+                </ul>
+                </div>
+           </div>
+       </div>
+   </div>
+   
+   <div id="begin" class="container"> 
+   
+      <div class="row">
+         <div class="span10 offset1">
+            <div class="page-header">
+            <h3>Invite a friend to play</h3>
+            </div>
+         	<div id="myCarousel" class="carousel">
+         	<!-- Carousel items -->
+   				<div class="carousel-inner">
+    				<div class="active item">
+    				    <ul class="thumbnails">
+                        <!-- lista dos amigos aqui -->
+                            {% for friend in logged_friends %}
+                            <li class="span2">
+                 				<div class="thumbnail">
+		    					<img src="{{ friend.get_profile.pic_square }}" class="small_photo" />{{ friend.first_name }} {{ friend.last_name }}
+							    <div class="caption">
+							    <p>Status: Online</p>
+							    <p><a id="{{friend.id}}" class="btn btn-mini" href=".">Invite to play</a></p>
+							    </div>
+							</li>
+							{% empty %}
+							<p>No friends registred</p>
+							{% endfor %}
+                 			<!-- 
+                 			<li class="span2">
+                 				<div class="thumbnail">
+                                <a href="." title="{{ book.book.title }}">
+			                      <img src="{{ STATIC_URL }}/img/teste_zuck.jpg" class="small_photo" >
+                                </a>
+                                <div class="caption">
+                                  	<p>Status: Online</p>
+                 				    <p><a class="btn btn-mini" href=".">Invite to play</a></p>
+                                </div>
+                                </div>
+                            </li>
+                           -->
+                            
+                            
+                        </ul>
+               	
+    				</div>
+    				<div class="item">Lista 2</div>
+    				<div class="item">Lista 3</div></div>
+  				</div>
+  			<!-- Carousel nav -->
+  			<a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+  			<a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+			</div>
+         </div>
+         <div class="row">
+         	<div class="span5 offset1">
+         	        <label>Find friend</label>
+            		<input type="text" data-provide="typeahead" placeholder="Name or email" data-items="4" data-source='["Alabama","Alaska","Arizona","Arkansas","California"]'>
+                    <br />
+					<br />
+					<br />
+                    <a class="btn btn-primary btn-large" href="."  rel="tooltip" title="start playing quick with a random friend">Quick play</a>
+            </div>
+            <div class="span5">
+         		<div class="page-header">
+            		<h3>List active rounds</h3>
+            	</div>
+            	<table id="call_to_play" class="table table-striped">
+            	<thead><tr><th>Oponent</th><th>Round</th><th>Status</th></tr></thead>
+            	<tbody>
+            	</tbody>
+            	</table>
+            </div>
+         </div>   	
+      </div>
 
-
+<!-- 
 <div id='friends'>
 	<h2>Friends</h2>
 	<ul>
@@ -13,24 +115,31 @@
 		</li>
 	{% endfor %}
 	</ul>
+<<<<<<< HEAD
 	<a id=play-button href="">Challenge</a>
 	
+=======
+	<a id=play-button href="">Jogar</a>	
+>>>>>>> ffee138f019e6fb57f4578e427737d2898ea8872
 </div>
 <div id="game_list">
     <ul>
     	
     </ul>
 </div>
+-->
 
 <script>
 $(document).ready(function(){
 	setTimeout('refresh_games()', 1*1000);
 });
 
-$("#play-button").click(function(event){
+$(".btn-mini").click(function(event){
     event.preventDefault();
     console.log("clicado");
-    var id = $('input[name="friendRadio"]:checked').parent()[0].id;
+    //var id = $('input[name="friendRadio"]:checked').parent()[0].id;
+    var id = $(this).attr("id");
+    
     console.log(id);
     $.post('/game_request/',{friend : id}, function(data) {
         console.log(data)
@@ -47,3 +156,4 @@ $("#play-button").click(function(event){
 
 </script>
 {% endblock %}
+
