@@ -1,12 +1,52 @@
 {% extends 'base.html' %}
 
-{% block extra_body %}
+{% block title %} On game - {{ user.get_full_name }} versus  {% endblock %}
 
-<div id='player1'>
-</div>
-<div id='player2'>
-</div>
-<a id='finish-button' href=''>Finish</a>
+{% block extra_body %}
+   <div class="navbar navbar-fixed-top facecards-navbar">
+       <div class="navbar-inner">
+           <div class="container">
+                  <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> 
+                      <span class="icon-bar"></span> 
+                      <span class="icon-bar"></span> 
+                      <span class="icon-bar"></span> 
+                  </a> 
+                  <a class="brand" href="{% url login %}">Facecards</a>
+                   <div class="nav-collapse pull-right">
+                   <ul class="nav">
+                   <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.get_full_name }}<b class="caret"></b></a>
+                      <ul class="dropdown-menu">
+                      	   <li><a href=".">Editar perfil</a></li>
+	                       <li><a href=".">Alterar senha</a></li>
+	                       <li><a href=".">Alterar email</a></li>
+	                       <li class="divider"></li>
+	                       <li><a href=".">Sair</a></li>
+                      </ul>
+                   </li>
+                </ul>
+                </div>
+           </div>
+       </div>
+   </div>
+   <div id="begin" class="container"> 
+   
+      <div class="row">
+         <div class="span5 offset1">
+            <img alt="" src="{{ user.get_profile.pic_square }}">
+            <h4>{{ user.get_full_name }}</h4>
+         	<div id='player1'>
+         	</div>
+         </div>
+         <div class="span5">
+         	<div id='player2'>
+          	</div>
+         </div>
+      </div>
+      <a id='finish-button' href=''>Finish</a>
+   </div>
+
+
 <script>
 $(document).ready(function(){
 	setTimeout('check_finish()', 1*1000);
