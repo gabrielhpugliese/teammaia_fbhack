@@ -103,7 +103,7 @@
             		<h3>List active rounds</h3>
             	</div>
             	<table id="call_to_play" class="table table-striped">
-            	<thead><tr><th>Oponent</th><th>Status</th></tr></thead>
+            	<thead><tr><th>Opponent</th><th>Status</th></tr></thead>
             	<tbody>
             	</tbody>
             	</table>
@@ -139,14 +139,13 @@ $(document).ready(function(){
 function refresh_logged_friends(){
     $.get('/refresh_logged_friends/', function(data){
         data = $.parseJSON(data);
-        var ul = $('ul.thumbnail').html('');
+        var ul = $('ul .thumbnails').html('');
         for(d in data){
-            console.log(data[d]);
             var line = '<li class="span2"> <div class="thumbnail"><img src="'+data[d].pic_square;
             line += '" class="small_photo" />'+data[d].name+'<div class="caption"><p>Status: Online</p><p><a id="'+data[d].friend_id;
             line += '" class="btn btn-mini" href=".">Invite to play</a></p></div></li>';
             ul.append(line);
-            console.log(line);
+
         }
     	setTimeout('refresh_logged_friends()', 5*1000);
     });

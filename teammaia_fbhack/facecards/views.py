@@ -58,7 +58,7 @@ def ajax_update_logged_friends(request):
     
 @login_required
 def keep_alive(request):
-    request.session.set_expiry(6000)
+    request.session.set_expiry(60)
     
     return HttpResponse('OK')
 
