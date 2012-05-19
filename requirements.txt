@@ -1,0 +1,11 @@
+Django==1.4
+South==0.7.5
+django-debug-toolbar==0.9.4
+-e git+git@github.com:digitalinc/django-fukinbook.git@991790e267d73c7ed432e043327f080e25992618#egg=django_fukinbook-dev
+django-nose==1.0
+gunicorn==0.14.3
+nose==1.1.2
+python-dateutil==2.1
+simplejson==2.5.2
+six==1.1.0
+wsgiref==0.1.2
