@@ -130,6 +130,7 @@ INSTALLED_APPS = (
     # 'south',
     'django_fukinbook',
     'facecards',
+    'gunicorn',
 )
 
 AUTH_PROFILE_MODULE = 'django_fukinbook.UserProfile'
