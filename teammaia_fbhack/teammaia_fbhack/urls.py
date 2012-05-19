@@ -16,6 +16,9 @@ urlpatterns = patterns('',
         name='check_finish'),
     url(r'^get_next_card/', 'facecards.views.get_next_card', 
         name='get_next_card'),
+    url(r'^get_turn/(?P<game_pk>\d+)', 'facecards.views.get_turn', name='get_turn'),
+    url(r'^get_lock/', 'facecards.views.get_lock', name='get_lock'),
+    url(r'^resolve_round/', 'facecards.views.resolve_round', name='resolve_round'),
     
     url(r'^admin/', include(admin.site.urls)),
 )

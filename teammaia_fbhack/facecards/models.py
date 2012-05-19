@@ -10,7 +10,9 @@ class Game(models.Model):
     
     player1 = models.ForeignKey(User, related_name='player1')
     player2 = models.ForeignKey(User, related_name='player2')
+    turn = models.ForeignKey(User, related_name='turn', default=None, null=True)
     status = models.CharField(max_length=1, choices=STATUS, verbose_name='Game status')
+    lock = models.BooleanField(default=False)
     
 class Round(models.Model):
     game = models.ForeignKey(Game)
